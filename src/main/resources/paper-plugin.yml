@@ -1,0 +1,17 @@
+name: Template
+version: '0.1.0-SNAPSHOT'
+main: 'org.winlogon.Template.MainClassPlugin'
+authors: ['winlogon']
+website: 'https://github.com/walker84837/TemplatePlugin'
+api-version: 1.21
+description: 'Description goes here'
+folia-supported: true
+permissions:
+  permission.example:
+    default: true
+dependencies:
+  server:
+    CommandAPI:
+      load: BEFORE
+      required: true
+      join-classpath: true

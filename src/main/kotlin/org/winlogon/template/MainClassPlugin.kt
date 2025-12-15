@@ -1,37 +1,45 @@
 package org.winlogon.template
 
-import dev.jorel.commandapi.CommandAPI
-import dev.jorel.commandapi.CommandAPICommand
-import dev.jorel.commandapi.executors.PlayerCommandExecutor
-import dev.jorel.commandapi.arguments.StringArgument
+import io.papermc.paper.command.brigadier.Commands
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.plugin.java.JavaPlugin
 
+import org.bukkit.plugin.java.JavaPlugin
+import org.winlogon.retrohue.RetroHue
+
+import com.mojang.brigadier.arguments.StringArgumentType
+import com.mojang.brigadier.Command
+
+@Suppress("UnstableApiUsage")
 class MainClassPlugin : JavaPlugin() {
-    val miniMessage = MiniMessage.miniMessage()
+    private val miniMessage = MiniMessage.miniMessage()
+    private lateinit var formatter: RetroHue
+
+    override fun onLoad() {
+        formatter = RetroHue(miniMessage)
+    }
+
     override fun onEnable() {
         saveDefaultConfig()
         registerCommands()
     }
 
-    private fun checkFolia(): Boolean {
-        return try {
-            Class.forName("io.papermc.paper.threadedregions.RegionizedServer")
-            true
-        } catch (e: ClassNotFoundException) {
-            false
-        }
-    }
-
     private fun registerCommands() {
-        CommandAPICommand("say")
-             .withArguments(StringArgument("text"))
-             .executesPlayer(PlayerCommandExecutor { player, args ->
-                 // handle code
-             })
-            .register()
+        this.lifecycleManager.registerEventHandler(LifecycleEvents.COMMANDS) { commands ->
+            val sayCommand = Commands.literal("say")
+                .then(Commands.argument("message", StringArgumentType.greedyString())
+                    .executes { ctx ->
+                        val message = StringArgumentType.getString(ctx, "message")
+                        val component = parseMessage(message)
+                        server.broadcast(component)
+                        Command.SINGLE_SUCCESS
+                    }
+                )
+                .build()
+            commands.registrar().register(sayCommand)
+        }
     }
 
     /**
@@ -40,45 +48,6 @@ class MainClassPlugin : JavaPlugin() {
      * This function supports both legacy codes (e.g. &a, &c) and native MiniMessage tags.
      */
     private fun parseMessage(input: String): Component {
-        return miniMessage.deserialize(legacyToMiniMessage(input))
+        return formatter.convertToComponent(input, '&')
     }
-
-    /**
-     * Converts all legacy ampersand color/format codes in the input string to equivalent MiniMessage tags.
-     *
-     * For example, "&aHello &cWorld" becomes "<green>Hello <red>World".
-     */
-     private fun legacyToMiniMessage(input: String): String {
-         val colorMap = mapOf(
-             '0' to "black",
-             '1' to "dark_blue",
-             '2' to "dark_green",
-             '3' to "dark_aqua",
-             '4' to "dark_red",
-             '5' to "dark_purple",
-             '6' to "gold",
-             '7' to "gray",
-             '8' to "dark_gray",
-             '9' to "blue",
-             'a' to "green",
-             'b' to "aqua",
-             'c' to "red",
-             'd' to "light_purple",
-             'e' to "yellow",
-             'f' to "white",
-             'k' to "obfuscated",
-             'l' to "bold",
-             'm' to "strikethrough",
-             'n' to "underlined",
-             'o' to "italic",
-             'r' to "reset"
-         )
-     
-         val regex = "&([0-9a-fk-or])".toRegex(RegexOption.IGNORE_CASE)
-         return regex.replace(input) { matchResult ->
-             val code = matchResult.groupValues[1].lowercase()
-             val tag = colorMap[code.first()]
-             if (tag != null) "<$tag>" else matchResult.value
-         }
-     }
 }

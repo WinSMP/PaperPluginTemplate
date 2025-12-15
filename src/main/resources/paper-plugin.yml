@@ -9,9 +9,3 @@ folia-supported: true
 permissions:
   permission.example:
     default: true
-dependencies:
-  server:
-    CommandAPI:
-      load: BEFORE
-      required: true
-      join-classpath: true

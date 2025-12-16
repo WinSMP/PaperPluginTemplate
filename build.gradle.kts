@@ -2,14 +2,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
-    id("com.gradleup.shadow") version "8.3.6"
-    kotlin("jvm") version "2.1.10"
+    id("com.gradleup.shadow") version "9.3.0"
+    kotlin("jvm") version "2.2.21"
 }
 
 group = "org.winlogon.template"
 
 fun getTime(): String {
-    val sdf = SimpleDateFormat("yyMMdd-HHmm")
+    val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
     sdf.timeZone = TimeZone.getTimeZone("UTC")
     return sdf.format(Date()).toString()
 }

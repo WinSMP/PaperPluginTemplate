@@ -65,8 +65,8 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
-    compileOnly("org.winlogon:retrohue:0.1.1")
-    compileOnly("org.winlogon:asynccraftr:0.1.0")
+    compileOnly("org.winlogon:retrohue:0.2.0")
+    compileOnly("org.winlogon:asynccraftr:0.2.0")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
     testImplementation("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")

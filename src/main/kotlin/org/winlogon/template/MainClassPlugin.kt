@@ -12,7 +12,6 @@ import org.winlogon.retrohue.RetroHue
 import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.Command
 
-@Suppress("UnstableApiUsage")
 class MainClassPlugin : JavaPlugin() {
     private val miniMessage = MiniMessage.miniMessage()
     private lateinit var formatter: RetroHue

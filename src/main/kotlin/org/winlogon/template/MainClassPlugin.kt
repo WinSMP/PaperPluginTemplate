@@ -13,10 +13,11 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.Command
 
 class MainClassPlugin : JavaPlugin() {
-    private val miniMessage = MiniMessage.miniMessage()
+    private lateinit var miniMessage: MiniMessage
     private lateinit var formatter: RetroHue
 
     override fun onLoad() {
+        miniMessage = MiniMessage.miniMessage()
         formatter = RetroHue(miniMessage)
     }
 

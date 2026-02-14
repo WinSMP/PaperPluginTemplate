@@ -42,7 +42,6 @@ repositories {
         url = uri("https://repo.papermc.io/repository/maven-public/")
         content {
             includeModule("io.papermc.paper", "paper-api")
-            includeModule("io.papermc", "paperlib")
             includeModule("net.md-5", "bungeecord-chat")
         }
     }
@@ -52,9 +51,6 @@ repositories {
         content {
             includeModule("com.mojang", "brigadier")
         }
-    }
-    maven {
-        url = uri("https://repo.codemc.org/repository/maven-public/")
     }
     maven {
         name = "winlogon-code"
@@ -90,7 +86,6 @@ tasks.processResources {
 
 tasks.shadowJar {
     archiveClassifier.set("")
-    relocate("io.papermc.lib", "shadow.io.papermc.paperlib")
     minimize()
 }
 
